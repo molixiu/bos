@@ -9,4 +9,7 @@ public interface BaseDao<T> {
 	public void update(T entity);
 	public T find_ById(Serializable id);
 	public List<T> findAll();
+	
+	//根据参数执行更新的操作
+	public void executeUpdate(String executeName,Object...object);
 }

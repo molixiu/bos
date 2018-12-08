@@ -25,12 +25,13 @@
 					alert("虽然我们穿着不同颜色的衣服,但我们追逐着同样色彩的梦想");
 				}
 			});*/
-			$.messager.show({"title":"欢迎信息",
+			/* $.messager.show({"title":"欢迎信息",
 							"msg":"啊，朝夕相处的伙伴,时间在风中流逝,云霞带来清晨的信息",
 							"timeout":5000,
 							"showType":"slide",
 
-			});
+			}); */
+			$.messager.alert('警告','警告消息'); 
 		});
 	</script>
 </body>

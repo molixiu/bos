@@ -4,4 +4,6 @@ import com.xjwfk.domain.User;
 
 public interface UserService {
 	public User getUser_ByusernameAndpassword(String username,String password);
+
+	public void editPassword(String password, String userId);
 }

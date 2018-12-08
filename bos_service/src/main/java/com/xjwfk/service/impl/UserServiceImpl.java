@@ -24,4 +24,10 @@ public class UserServiceImpl implements UserService {
 		this.userDao = userDao;
 	}
 
+	@Override
+	public void editPassword(String password, String userId) {
+		String password_MD5 = MD5Utils.md5(password);
+		userDao.executeUpdate("user.editPassword",password_MD5,userId);
+	}
+
 }

@@ -6,6 +6,6 @@ import com.xjwfk.dao.base.BaseDao;
 import com.xjwfk.domain.User;
 public interface UserDao extends BaseDao<User> {
 
-	User getUser_ByusernameAndpassword(String username, String password);
+	public User getUser_ByusernameAndpassword(String username, String password);
 
 }

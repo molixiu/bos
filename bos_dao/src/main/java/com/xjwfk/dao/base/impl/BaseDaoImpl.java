@@ -5,6 +5,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
@@ -55,6 +57,17 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T>{
 		ParameterizedType superclass = (ParameterizedType) this.getClass().getGenericSuperclass();
 		Type[] typeArguments = superclass.getActualTypeArguments();
 		Class<T> clazz = (Class<T>) typeArguments[0];
+	}
+	
+	@Override
+	public void executeUpdate(String executeName, Object... object) {
+		Session session = this.getSessionFactory().getCurrentSession();
+		Query query = session.getNamedQuery(executeName);
+		int index = 0;
+		for(Object obj:object) {
+			query.setParameter(index++, obj);
+		}
+		query.executeUpdate();
 	}
 	
 }

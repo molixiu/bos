@@ -40,7 +40,7 @@
 				onClick : onClick
 			}
 		};
-		
+
 		// 基本功能菜单加载
 		$.ajax({
 			url : '${pageContext.request.contextPath}/json/menu.json',
@@ -54,7 +54,7 @@
 				alert('菜单加载异常!');
 			}
 		});
-		
+
 		// 系统管理菜单加载
 		$.ajax({
 			url : '${pageContext.request.contextPath}/json/admin.json',
@@ -68,43 +68,43 @@
 				alert('菜单加载异常!');
 			}
 		});
-		
+
 		// 页面加载后 右下角 弹出窗口
 		/**************/
-		window.setTimeout(function(){
-			$.messager.show({
-				title:"消息提示",
-				msg:'欢迎登录，超级管理员！ <a href="javascript:void" onclick="top.showAbout();">联系管理员</a>',
-				timeout:5000
-			});
-		},3000);
+		window
+				.setTimeout(
+						function() {
+							$.messager
+									.show({
+										title : "消息提示",
+										msg : '欢迎登录，超级管理员！ <a href="javascript:void" onclick="top.showAbout();">联系管理员</a>',
+										timeout : 5000
+									});
+						}, 3000);
 		/*************/
-		
-		$("#btnCancel").click(function(){
+
+		$("#btnCancel").click(function() {
 			$('#editPwdWindow').window('close');
 		});
-		
-		$("#btnEp").click(function(){
-			alert("修改密码");
-		});
+
 	});
 
 	function onClick(event, treeId, treeNode, clickFlag) {
 		// 判断树菜单节点是否含有 page属性
-		if (treeNode.page!=undefined && treeNode.page!= "") {
+		if (treeNode.page != undefined && treeNode.page != "") {
 			var content = '<div style="width:100%;height:100%;overflow:hidden;">'
 					+ '<iframe src="'
 					+ treeNode.page
 					+ '" scrolling="auto" style="width:100%;height:100%;border:0;" ></iframe></div>';
 			if ($("#tabs").tabs('exists', treeNode.name)) {// 判断tab是否存在
 				$('#tabs').tabs('select', treeNode.name); // 切换tab
-				var tab = $('#tabs').tabs('getSelected'); 
+				var tab = $('#tabs').tabs('getSelected');
 				$('#tabs').tabs('update', {
-				    tab: tab,
-				    options: {
-				        title: treeNode.name,
-				        content: content
-				    }
+					tab : tab,
+					options : {
+						title : treeNode.name,
+						content : content
+					}
 				});
 			} else {
 				// 开启一个新的tab页面
@@ -131,7 +131,7 @@
 		$easyuiTheme.attr('href', href);
 		var $iframe = $('iframe');
 		if ($iframe.length > 0) {
-			for ( var i = 0; i < $iframe.length; i++) {
+			for (var i = 0; i < $iframe.length; i++) {
 				var ifr = $iframe[i];
 				$(ifr).contents().find('#easyuiTheme').attr('href', href);
 			}
@@ -140,30 +140,64 @@
 	// 退出登录
 	function logoutFun() {
 		$.messager
-		.confirm('系统提示','您确定要退出本次登录吗?',function(isConfirm) {
-			if (isConfirm) {
-				location.href = '${pageContext.request.contextPath }/userAction_quit';
-			}
-		});
+				.confirm(
+						'系统提示',
+						'您确定要退出本次登录吗?',
+						function(isConfirm) {
+							if (isConfirm) {
+								location.href = '${pageContext.request.contextPath }/userAction_quit';
+							}
+						});
 	}
-	// 修改密码
+	// 弹出修改密码的面板
 	function editPassword() {
 		$('#editPwdWindow').window('open');
 	}
+
+	//点击取消按钮取消修改密码
+	function cancel() {
+		$('#editPwdWindow').window('close');
+	}
+
+	//点击确定按钮修改密码
+	function changePassword() {
+		var validate = $('#passwordForm').form("validate");
+		if (validate) { //用户输入的格式验证正确
+			var newPassword = $('#newPassword').val();
+			var rePassword = $('#rePassword').val();
+			if (newPassword == rePassword) {
+				$.post("${pageContext.request.contextPath}/userAction_editPassword",
+						{"password":newPassword},
+						function(data){
+							if (data == "1") {	//如果密码修改成功
+								$.messager.alert('提示信息','您的密码已修改'); 
+								$('#editPwdWindow').window('close');
+							}else {
+								$.messager.alert('提示信息','修改错误'); 
+							}
+						});
+			} else {
+				$.messager.alert('提示信息','两次密码输入不一致');
+			}
+		} else {
+			$.messager.alert('提示信息','请检查你的输入是否正确');
+		}
+	}
+
 	// 版权信息
-	function showAbout(){
-		$.messager.alert("宅急送 v1.0","管理员邮箱: zqx@itcast.cn");
+	function showAbout() {
+		$.messager.alert("宅急送 v1.0", "管理员邮箱: zqx@itcast.cn");
 	}
 </script>
 </head>
 <body class="easyui-layout">
 	<div data-options="region:'north',border:false"
-		style="height:80px;padding:10px;background:url('./images/header_bg.png') no-repeat right;">
+		style="height: 80px; padding: 10px; background: url('./images/header_bg.png') no-repeat right;">
 		<div id="sessionInfoDiv"
-			style="position: absolute;right: 5px;top:10px;">
+			style="position: absolute; right: 5px; top: 10px;">
 			[<strong>${user.username }</strong>]，欢迎你！
 		</div>
-		<div style="position: absolute; right: 5px; bottom: 10px; ">
+		<div style="position: absolute; right: 5px; bottom: 10px;">
 			<a href="javascript:void(0);" class="easyui-menubutton"
 				data-options="menu:'#layout_north_pfMenu',iconCls:'icon-ok'">更换皮肤</a>
 			<a href="javascript:void(0);" class="easyui-menubutton"
@@ -177,19 +211,23 @@
 			<div onclick="changeTheme('metro');">metro</div>
 		</div>
 		<div id="layout_north_kzmbMenu" style="width: 100px; display: none;">
-			<div onclick="editPassword();">修改密码</div>
+			<div onclick="editPassword();" data-options="iconCls:'icon-edit'">修改密码</div>
 			<div onclick="showAbout();">联系管理员</div>
 			<div class="menu-sep"></div>
-			<div onclick="logoutFun();"><a href="javascript:logoutFun()">退出系统</a></div>
+			<div onclick="logoutFun();">
+				<a href="javascript:logoutFun()">退出系统</a>
+			</div>
 		</div>
 	</div>
 	<div data-options="region:'west',split:true,title:'菜单导航'"
-		style="width:200px">
+		style="width: 200px">
 		<div class="easyui-accordion" fit="true" border="false">
-			<div title="基本功能" data-options="iconCls:'icon-mini-add'" style="overflow:auto">
+			<div title="基本功能" data-options="iconCls:'icon-mini-add'"
+				style="overflow: auto">
 				<ul id="treeMenu" class="ztree"></ul>
 			</div>
-			<div title="系统管理" data-options="iconCls:'icon-mini-add'" style="overflow:auto">  
+			<div title="系统管理" data-options="iconCls:'icon-mini-add'"
+				style="overflow: auto">
 				<ul id="adminMenu" class="ztree"></ul>
 			</div>
 		</div>
@@ -197,15 +235,16 @@
 	<div data-options="region:'center'">
 		<div id="tabs" fit="true" class="easyui-tabs" border="false">
 			<div title="消息中心" id="subWarp"
-				style="width:100%;height:100%;overflow:hidden">
-				<iframe src="${pageContext.request.contextPath }/page_common_home.action"
-					style="width:100%;height:100%;border:0;"></iframe>
+				style="width: 100%; height: 100%; overflow: hidden">
+				<iframe
+					src="${pageContext.request.contextPath }/page_common_home.action"
+					style="width: 100%; height: 100%; border: 0;"></iframe>
 				<%--				这里显示公告栏、预警信息和代办事宜--%>
 			</div>
 		</div>
 	</div>
 	<div data-options="region:'south',border:false"
-		style="height:50px;padding:10px;background:url('./images/header_bg.png') no-repeat right;">
+		style="height: 50px; padding: 10px; background: url('./images/header_bg.png') no-repeat right;">
 		<table style="width: 100%;">
 			<tbody>
 				<tr>
@@ -221,29 +260,40 @@
 			</tbody>
 		</table>
 	</div>
-	
+
 	<!--修改密码窗口-->
-    <div id="editPwdWindow" class="easyui-window" title="修改密码" collapsible="false" minimizable="false" modal="true" closed="true" resizable="false"
-        maximizable="false" icon="icon-save"  style="width: 300px; height: 160px; padding: 5px;
-        background: #fafafa">
-        <div class="easyui-layout" fit="true">
-            <div region="center" border="false" style="padding: 10px; background: #fff; border: 1px solid #ccc;">
-                <table cellpadding=3>
-                    <tr>
-                        <td>新密码：</td>
-                        <td><input id="txtNewPass" type="Password" class="txt01" /></td>
-                    </tr>
-                    <tr>
-                        <td>确认密码：</td>
-                        <td><input id="txtRePass" type="Password" class="txt01" /></td>
-                    </tr>
-                </table>
-            </div>
-            <div region="south" border="false" style="text-align: right; height: 30px; line-height: 30px;">
-                <a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" >确定</a> 
-                <a id="btnCancel" class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)">取消</a>
-            </div>
-        </div>
-    </div>
+	<div id="editPwdWindow" class="easyui-window" title="修改密码"
+		collapsible="false" minimizable="false" modal="true" closed="true"
+		resizable="false" maximizable="false" icon="icon-save"
+		style="width: 300px; height: 160px; padding: 5px; background: #fafafa">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false"
+				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
+				<form action="#" id="passwordForm">
+					<table cellpadding=3>
+						<tr>
+							<td>新密码：</td>
+							<td><input id="newPassword" type="Password"
+								class="easyui-validatebox"
+								data-options="required:true,validType:'length[4,11]'" /></td>
+						</tr>
+						<tr>
+							<td>确认密码：</td>
+							<td><input id="rePassword" type="Password"
+								class="easyui-validatebox"
+								data-options="required:true,validType:'length[4,11]'" /></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<div region="south" border="false"
+				style="text-align: right; height: 30px; line-height: 30px;">
+				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok"
+					href="javascript:changePassword()">确定</a> <a id="btnCancel"
+					class="easyui-linkbutton" icon="icon-cancel"
+					href="javascript:cancel()">取消</a>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

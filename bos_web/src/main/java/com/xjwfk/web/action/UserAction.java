@@ -1,5 +1,7 @@
 package com.xjwfk.web.action;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,6 +49,20 @@ public class UserAction extends BaseAction<User> {
 		System.out.println("111");
 		ServletActionContext.getRequest().getSession().invalidate();// 这段代码彻底清空了session
 		return "login_redirect";
+	}
+	
+	//修改密码
+	public String editPassword() throws IOException {
+		String userId = BOSUtils.getCurrentLoginUser().getId();
+		try {	//如果Service层或数据库发生异常
+			userService.editPassword(model.getPassword(),userId);
+		} catch (Exception e) {
+			ServletActionContext.getResponse().getWriter().write("0");
+			e.printStackTrace();
+		}
+		ServletActionContext.getResponse().setContentType("text/html;charset=UTF-8");
+		ServletActionContext.getResponse().getWriter().write("1");
+		return null;
 	}
 
 	public void setCheckcode(String checkcode) {
