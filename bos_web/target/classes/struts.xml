@@ -33,7 +33,8 @@
 			<result name="login_redirect" type="redirect">/login.jsp</result>
 		</action>
 		<action name="staffAction_*" class="staffAction" method="{1}">
-			<result name="save_success">/WEB-INF/pages/page_base_staff.action</result>
+			<result name="save_success">page_base_staff.action</result>
+			<result name="staffList">page_base_staff.action</result>
 		</action>
 	</package>	
 </struts>

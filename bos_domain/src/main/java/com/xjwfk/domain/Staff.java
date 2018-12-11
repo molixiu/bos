@@ -8,9 +8,6 @@ import java.util.Set;
  */
 
 public class Staff implements java.io.Serializable {
-
-	// Fields
-
 	private String id;
 	private String name;
 	private String telephone;

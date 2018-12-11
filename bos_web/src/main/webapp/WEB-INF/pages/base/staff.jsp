@@ -37,7 +37,25 @@
 	}
 
 	function doDelete() {
-		alert("删除...");
+		var rows = $("#grid").datagrid("getSelections");
+		if (rows.length != 0) {
+			$.messager
+					.confirm(
+							'确认删除',
+							'您确定要删除所选的派送员吗?',
+							function(confirm) {
+								if (confirm) { //如果用户确认要进行删除操作
+									var array = new Array();
+									for (var i = 0; i < rows.length; i++) {
+										array.push(rows[i].id);
+									}
+									var submitURL = "${pageContext.request.contextPath}/staffAction_delete";
+									location.href = submitURL + "?ids=" + array;
+								}
+							});
+		} else { //如果用户一个也没选择就点删除
+			$.messager.alert('提示信息', '请选择你要删除的用户');
+		}
 	}
 
 	function doRestore() {
@@ -56,7 +74,7 @@
 		handler : doAdd
 	}, {
 		id : 'button-delete',
-		text : '作废',
+		text : '删除',
 		iconCls : 'icon-cancel',
 		handler : doDelete
 	}, {
@@ -128,10 +146,10 @@
 			border : false,
 			rownumbers : true,
 			striped : true,
-			pageList : [ 30, 50, 100 ],
+			pageList : [ 2, 10, 30, 50, 100 ],
 			pagination : true,
 			toolbar : toolbar,
-			url : "json/staff.json",
+			url : "${pageContext.request.contextPath}/staffAction_pageQuery",
 			idField : 'id',
 			columns : columns,
 			onDblClickRow : doDblClickRow
@@ -147,11 +165,23 @@
 			height : 400,
 			resizable : false
 		});
+		
+		// 修改取派员窗口
+		$('#editStaffWindow').window({
+			title : '修改取派员信息',
+			width : 400,
+			modal : true,
+			shadow : true,
+			closed : true,
+			height : 400,
+			resizable : false
+		});
 
 	});
 
 	function doDblClickRow(rowIndex, rowData) {
-		alert("双击表格数据...");
+		$('#editStaffWindow').window("open");		//打开修改窗口
+		$('#editStaffWindow').form('load',rowData);	//回显数据
 	}
 
 	//用easyui自定义手机号的验证规则
@@ -166,12 +196,12 @@
 	});
 
 	//取派员信息表单提交
-	function save() {
-		var validate = $('#staffForm').form('validate');
+	function submit(fromId) {
+		var validate = fromId.form('validate');
 		if (validate) { //用户信息输入格式正确
-			$('#staffForm').submit();
-		}else{
-			$.messager.alert('警告','您的输入有误');    
+			fromId.submit();
+		} else {
+			$.messager.alert('警告', '您的输入有误');
 		}
 	}
 </script>
@@ -180,20 +210,75 @@
 	<div region="center" border="false">
 		<table id="grid"></table>
 	</div>
-	<div class="easyui-window" title="对收派员进行添加或者修改" id="addStaffWindow"
+	<div class="easyui-window" title="对收派员进行添加" id="addStaffWindow"
 		collapsible="false" minimizable="false" maximizable="false"
 		style="top: 20px; left: 200px">
 		<div region="north" style="height: 31px; overflow: hidden;"
 			split="false" border="false">
 			<div class="datagrid-toolbar">
 				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton"
-					plain="true" onclick="save()">保存</a>
+					plain="true" onclick="submit($('#staffForm_add'))">保存</a>
 			</div>
 		</div>
 
 		<div region="center" style="overflow: auto; padding: 5px;"
 			border="false">
-			<form id="staffForm" action="${pageContext.request.contextPath}/staffAction_save" method="post">
+			<form id="staffForm_add"
+				action="${pageContext.request.contextPath}/staffAction_save"
+				method="post">
+				<table class="table-edit" width="80%" align="center">
+					<tr class="title">
+						<td colspan="2">收派员信息</td>
+					</tr>
+					<!-- TODO 这里完善收派员添加 table -->
+
+					<tr>
+						<td>姓名</td>
+						<td><input type="text" name="name" class="easyui-validatebox"
+							required="true" /></td>
+					</tr>
+					<tr>
+						<td>手机</td>
+						<td><input type="text" name="telephone"
+							class="easyui-validatebox"
+							data-options="required:true,validType:'telephone'" /></td>
+					</tr>
+					<tr>
+						<td>单位</td>
+						<td><input type="text" name="station"
+							class="easyui-validatebox" required="true" /></td>
+					</tr>
+					<tr>
+						<td colspan="2"><input type="checkbox" name="haspda"
+							value="1" /> 是否有PDA</td>
+					</tr>
+					<tr>
+						<td>取派标准</td>
+						<td><input type="text" name="standard"
+							class="easyui-validatebox" required="true" /></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+
+	<div class="easyui-window" title="对收派员进行修改" id="editStaffWindow"
+		collapsible="false" minimizable="false" maximizable="false"
+		style="top: 20px; left: 200px">
+		<div region="north" style="height: 31px; overflow: hidden;"
+			split="false" border="false">
+			<div class="datagrid-toolbar">
+				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton"
+					plain="true" onclick="submit($('#staffForm_edit'))">修改</a>
+			</div>
+		</div>
+
+		<div region="center" style="overflow: auto; padding: 5px;"
+			border="false">
+			<form id="staffForm_edit"
+				action="${pageContext.request.contextPath}/staffAction_update"
+				method="post">
+				<input type="hidden" name="id">
 				<table class="table-edit" width="80%" align="center">
 					<tr class="title">
 						<td colspan="2">收派员信息</td>

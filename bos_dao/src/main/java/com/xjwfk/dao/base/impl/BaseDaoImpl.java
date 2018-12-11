@@ -8,10 +8,14 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 import com.xjwfk.dao.base.BaseDao;
+import com.xjwfk.domain.PageBean;
 
 
 public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T>{
@@ -21,6 +25,7 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T>{
 	public void setMySessionFactory(SessionFactory sessionFactory) {
 		this.setSessionFactory(sessionFactory);
 	}
+	
 	@Override
 	public void save(T entity) {
 		this.getHibernateTemplate().save(entity);
@@ -56,7 +61,7 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T>{
 		//三行代码获得泛型
 		ParameterizedType superclass = (ParameterizedType) this.getClass().getGenericSuperclass();
 		Type[] typeArguments = superclass.getActualTypeArguments();
-		Class<T> clazz = (Class<T>) typeArguments[0];
+		clazz = (Class<T>) typeArguments[0];
 	}
 	
 	@Override
@@ -68,6 +73,23 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T>{
 			query.setParameter(index++, obj);
 		}
 		query.executeUpdate();
+	}
+	@Override
+	public void pageQuery(PageBean pageBean) {
+		int page = pageBean.getPage();
+		int pageSize = pageBean.getPageSize();
+		DetachedCriteria criteria = pageBean.getDetachedCriteria();
+		
+		criteria.setProjection(Projections.rowCount());
+		List<Long> totalList = (List<Long>) this.getHibernateTemplate().findByCriteria(criteria);
+		Long total = totalList.get(0);
+		pageBean.setTotal(total.intValue());
+		
+		criteria.setProjection(null);
+		int firstResult = pageBean.getPage() - 1;
+		int maxResults = pageBean.getPageSize();
+		List rows = this.getHibernateTemplate().findByCriteria(criteria, firstResult, maxResults);
+		pageBean.setRows(rows);
 	}
 	
 }
