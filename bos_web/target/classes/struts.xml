@@ -36,5 +36,11 @@
 			<result name="save_success">page_base_staff.action</result>
 			<result name="staffList">page_base_staff.action</result>
 		</action>
+		<action name="regionAction_*" class="regionAction" method="{1}">
+			
+		</action>
+		<action name="subareaAction_*" class="subareaAction" method="{1}">
+			<result name="save_sucess">page_base_subarea.action</result>
+		</action>
 	</package>	
 </struts>

@@ -12,7 +12,7 @@ public interface BaseDao<T> {
 	public T find_ById(Serializable id);
 	public List<T> findAll();
 	public void pageQuery(PageBean pageBean);	//分页查询
-	
+	public void saveORupdate(T entity);
 	//根据参数执行更新的操作
 	public void executeUpdate(String executeName,Object...object);
 }

@@ -1,0 +1,11 @@
+package com.xjwfk.dao.impl;
+
+import org.springframework.stereotype.Repository;
+
+import com.xjwfk.dao.RegionDao;
+import com.xjwfk.dao.base.impl.BaseDaoImpl;
+import com.xjwfk.domain.Region;
+@Repository
+public class RegionDaoImpl extends BaseDaoImpl<Region> implements RegionDao {
+
+}

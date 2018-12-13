@@ -174,7 +174,7 @@
 	        shadow: true,
 	        closed: true,
 	        height: 400,
-	        resizable:false
+	        resizable:true
 	    });
 		
 		// 查询分区
@@ -187,6 +187,7 @@
 	        height: 400,
 	        resizable:false
 	    });
+		
 		$("#btn").click(function(){
 			alert("执行查询...");
 		});
@@ -196,6 +197,17 @@
 	function doDblClickRow(){
 		alert("双击表格数据...");
 	}
+	
+	//表单提交事件
+	function submit(formId){
+		var validate = formId.form('validate');
+		if(validate){
+			formId.submit();
+		}else{
+			$.messager.alert('警告', '您的输入有误');
+		}
+	}
+	
 </script>	
 </head>
 <body class="easyui-layout" style="visibility:hidden;">
@@ -206,25 +218,21 @@
 	<div class="easyui-window" title="分区添加修改" id="addSubareaWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
 		<div style="height:31px;overflow:hidden;" split="false" border="false" >
 			<div class="datagrid-toolbar">
-				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true" >保存</a>
+				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true" onclick="submit($('#subareaForm'))" >保存</a>
 			</div>
 		</div>
 		
 		<div style="overflow:auto;padding:5px;" border="false">
-			<form>
+			<form action="${pageContext.request.contextPath}/subareaAction_save" method="post" id="subareaForm">
 				<table class="table-edit" width="80%" align="center">
 					<tr class="title">
 						<td colspan="2">分区信息</td>
 					</tr>
 					<tr>
-						<td>分拣编码</td>
-						<td><input type="text" name="id" class="easyui-validatebox" required="true"/></td>
-					</tr>
-					<tr>
 						<td>选择区域</td>
 						<td>
 							<input class="easyui-combobox" name="region.id"  
-    							data-options="valueField:'id',textField:'name',url:'json/standard.json'" />  
+    							data-options="valueField:'id',textField:'name',mode:'remote',url:'${pageContext.request.contextPath }/regionAction_listAjax'" />  
 						</td>
 					</tr>
 					<tr>

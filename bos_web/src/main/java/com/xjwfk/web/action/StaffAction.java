@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import com.xjwfk.domain.PageBean;
 import com.xjwfk.domain.Staff;
 import com.xjwfk.service.StaffService;
+import com.xjwfk.utils.MyJsonUtils;
 import com.xjwfk.web.action.base.BaseAction;
 
 import net.sf.json.JSONObject;
@@ -22,8 +23,6 @@ import net.sf.json.JsonConfig;
 public class StaffAction extends BaseAction<Staff> {
 	@Autowired
 	private StaffService staffService;
-	private int page;	//这
-	private int rows;	//两个参数是分页查询的
 	private String ids; //这个是批量删除或删除的
 
 	public String save() {
@@ -31,19 +30,9 @@ public class StaffAction extends BaseAction<Staff> {
 		return "save_success";
 	}
 
-	public String pageQuery() throws IOException { // 分页查询
-		PageBean pageBean = new PageBean();
-		pageBean.setPage(page);
-		pageBean.setPageSize(rows);
-		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Staff.class);
-		pageBean.setDetachedCriteria(detachedCriteria);
-
+	public String pageQuery() throws IOException { // 分页查询	
 		staffService.pageQuery(pageBean);
-		
-		JsonConfig jsonConfig = new JsonConfig();
-		jsonConfig.setExcludes(new String[] { "detachedCriteria", "page", }); // 把不需要的数据剔除
-		String json = JSONObject.fromObject(pageBean, jsonConfig).toString();
-
+		String json = MyJsonUtils.OjectToJson(pageBean, new String[] { "detachedCriteria", "page", });
 		ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
 		ServletActionContext.getResponse().getWriter().write(json);
 		return NONE;
@@ -71,13 +60,6 @@ public class StaffAction extends BaseAction<Staff> {
 		this.staffService = staffService;
 	}
 
-	public void setPage(int page) {
-		this.page = page;
-	}
-
-	public void setRows(int rows) {
-		this.rows = rows;
-	}
 
 	public void setIds(String ids) {
 		this.ids = ids;

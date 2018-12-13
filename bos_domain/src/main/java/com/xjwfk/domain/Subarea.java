@@ -108,4 +108,12 @@ public class Subarea implements java.io.Serializable {
 		this.position = position;
 	}
 
+	@Override
+	public String toString() {
+		return "Subarea [id=" + id + ", decidedzone=" + decidedzone + ", region=" + region + ", addresskey="
+				+ addresskey + ", startnum=" + startnum + ", endnum=" + endnum + ", single=" + single + ", position="
+				+ position + "]";
+	}
+
+	
 }

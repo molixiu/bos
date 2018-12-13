@@ -1,0 +1,11 @@
+package com.xjwfk.service;
+
+import java.util.List;
+
+import com.xjwfk.domain.Region;
+
+public interface RegionService {
+
+	public void saveBatch(List<Region> regions);
+	
+}

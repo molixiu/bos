@@ -3,6 +3,8 @@ package com.xjwfk.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.http.converter.protobuf.ProtobufHttpMessageConverter;
+
 /**
  * 区域
  */
@@ -29,6 +31,18 @@ public class Region implements java.io.Serializable {
 	/** minimal constructor */
 	public Region(String id) {
 		this.id = id;
+	}
+	
+	public Region(String id, String province, String city, String district, String postcode, String shortcode,
+			String citycode) {
+		super();
+		this.id = id;
+		this.province = province;
+		this.city = city;
+		this.district = district;
+		this.postcode = postcode;
+		this.shortcode = shortcode;
+		this.citycode = citycode;
 	}
 
 	/** full constructor */
@@ -109,5 +123,8 @@ public class Region implements java.io.Serializable {
 	public void setSubareas(Set subareas) {
 		this.subareas = subareas;
 	}
-
+	
+	public String getName() {
+		return province + " " + city + " " + district;
+	}
 }

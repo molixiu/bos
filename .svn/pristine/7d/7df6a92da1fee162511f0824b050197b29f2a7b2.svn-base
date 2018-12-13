@@ -1,0 +1,14 @@
+package com.xjwfk.utils;
+
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+
+public class MyJsonUtils {
+	
+	public static String ObjectToJson(Object obj,String[] excStr) {
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.setExcludes(excStr); // 把不需要的数据剔除
+		String json = JSONObject.fromObject(obj, jsonConfig).toString();
+		return json;
+	}
+}
