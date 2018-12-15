@@ -65,7 +65,7 @@ public class RegionAction extends BaseAction<Region> {
 	
 	public String pageQuery() throws IOException {
 		regionService.pageQuery(pageBean);
-		String json = MyJsonUtils.OjectToJson(pageBean, new String[] {"id"});
+		String json = MyJsonUtils.OjectToJson(pageBean, new String[] {"id","subareas"});
 		ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
 		ServletActionContext.getResponse().getWriter().write(json);
 		return null;

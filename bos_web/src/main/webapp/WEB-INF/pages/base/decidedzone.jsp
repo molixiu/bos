@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -16,7 +16,7 @@
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath }/js/easyui/ext/portal.css">
 <link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath }/css/default.css">	
+	href="${pageContext.request.contextPath }/css/default.css">
 <script type="text/javascript"
 	src="${pageContext.request.contextPath }/js/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript"
@@ -125,7 +125,7 @@
 			pageList: [30,50,100],
 			pagination : true,
 			toolbar : toolbar,
-			url : "json/decidedzone.json",
+			url : "${pageContext.request.contextPath}/decidedzoneAction_pageQuery",
 			idField : 'id',
 			columns : columns,
 			onDblClickRow : doDblClickRow
@@ -247,65 +247,84 @@
 		});
 		
 	}
-</script>	
+	
+	//表单提交事件
+	function submit(formId){
+		var validate = formId.form('validate');
+		if(validate){	//用户输入格式错误
+			formId.submit();
+		}else{
+			$.messager.alert('警告', '您的输入有误');
+		}
+	}
+</script>
 </head>
-<body class="easyui-layout" style="visibility:hidden;">
+<body class="easyui-layout" style="visibility: hidden;">
 	<div region="center" border="false">
-    	<table id="grid"></table>
+		<table id="grid"></table>
 	</div>
-	<div region="south" border="false" style="height:150px">
+	<div region="south" border="false" style="height: 150px">
 		<div id="tabs" fit="true" class="easyui-tabs">
 			<div title="关联分区" id="subArea"
-				style="width:100%;height:100%;overflow:hidden">
+				style="width: 100%; height: 100%; overflow: hidden">
 				<table id="association_subarea"></table>
-			</div>	
+			</div>
 			<div title="关联客户" id="customers"
-				style="width:100%;height:100%;overflow:hidden">
+				style="width: 100%; height: 100%; overflow: hidden">
 				<table id="association_customer"></table>
-			</div>	
-		</div>
-	</div>
-	
-	<!-- 添加 修改分区 -->
-	<div class="easyui-window" title="定区添加修改" id="addDecidedzoneWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
-		<div style="height:31px;overflow:hidden;" split="false" border="false" >
-			<div class="datagrid-toolbar">
-				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true" >保存</a>
 			</div>
 		</div>
-		
-		<div style="overflow:auto;padding:5px;" border="false">
-			<form>
+	</div>
+
+	<!-- 添加 修改分区 -->
+	<div class="easyui-window" title="定区添加修改" id="addDecidedzoneWindow"
+		collapsible="false" minimizable="false" maximizable="false"
+		style="top: 20px; left: 200px">
+		<div style="height: 31px; overflow: hidden;" split="false"
+			border="false">
+			<div class="datagrid-toolbar">
+				<a id="save" icon="icon-save" href="#" class="easyui-linkbutton"
+					plain="true" onclick="submit($('#addDecidedzoneForm'))">保存</a>
+			</div>
+		</div>
+
+		<div style="overflow: auto; padding: 5px;" border="false">
+			<form id="addDecidedzoneForm"
+				action="${pageContext.request.contextPath}/decidedzoneAction_add"
+				method="post">
 				<table class="table-edit" width="80%" align="center">
 					<tr class="title">
 						<td colspan="2">定区信息</td>
 					</tr>
 					<tr>
 						<td>定区编码</td>
-						<td><input type="text" name="id" class="easyui-validatebox" required="true"/></td>
+						<td><input type="text" name="id" class="easyui-validatebox"
+							required="true" /></td>
 					</tr>
 					<tr>
 						<td>定区名称</td>
-						<td><input type="text" name="name" class="easyui-validatebox" required="true"/></td>
+						<td><input type="text" name="name" class="easyui-validatebox"
+							required="true" /></td>
 					</tr>
 					<tr>
 						<td>选择负责人</td>
-						<td>
-							<input class="easyui-combobox" name="region.id"  
-    							data-options="valueField:'id',textField:'name',url:'json/standard.json'" />  
+						<td><input class="easyui-combobox" name="staff.id"
+							data-options="valueField:'id',textField:'name',mode:'remote',url:'${pageContext.request.contextPath}/staffAction_listAjax'" />
 						</td>
 					</tr>
 					<tr height="300">
 						<td valign="top">关联分区</td>
 						<td>
-							<table id="subareaGrid"  class="easyui-datagrid" border="false" style="width:300px;height:300px" data-options="url:'json/decidedzone_subarea.json',fitColumns:true,singleSelect:false">
-								<thead>  
-							        <tr>  
-							            <th data-options="field:'id',width:30,checkbox:true">编号</th>  
-							            <th data-options="field:'addresskey',width:150">关键字</th>  
-							            <th data-options="field:'position',width:200,align:'right'">位置</th>  
-							        </tr>  
-							    </thead> 
+							<table id="subareaGrid" class="easyui-datagrid" border="false"
+								style="width: 300px; height: 300px"
+								data-options="url:'${pageContext.request.contextPath}/subareaAction_listAjax',fitColumns:true,singleSelect:false">
+								<thead>
+									<tr>
+										<th data-options="field:'subareaid',width:30,checkbox:true" >编号</th>
+										<th data-options="field:'addresskey',width:150">关键字</th>
+										<th data-options="field:'position',width:200,align:'right'">位置</th>
+									</tr>
+								</thead>
 							</table>
 						</td>
 					</tr>
@@ -314,8 +333,10 @@
 		</div>
 	</div>
 	<!-- 查询定区 -->
-	<div class="easyui-window" title="查询定区窗口" id="searchWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
-		<div style="overflow:auto;padding:5px;" border="false">
+	<div class="easyui-window" title="查询定区窗口" id="searchWindow"
+		collapsible="false" minimizable="false" maximizable="false"
+		style="top: 20px; left: 200px">
+		<div style="overflow: auto; padding: 5px;" border="false">
 			<form>
 				<table class="table-edit" width="80%" align="center">
 					<tr class="title">
@@ -323,43 +344,50 @@
 					</tr>
 					<tr>
 						<td>定区编码</td>
-						<td><input type="text" name="id" class="easyui-validatebox" required="true"/></td>
+						<td><input type="text" name="id" class="easyui-validatebox"
+							required="true" /></td>
 					</tr>
 					<tr>
 						<td>所属单位</td>
-						<td><input type="text" name="staff.station" class="easyui-validatebox" required="true"/></td>
+						<td><input type="text" name="staff.station"
+							class="easyui-validatebox" required="true" /></td>
 					</tr>
 					<tr>
-						<td colspan="2"><a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> </td>
+						<td colspan="2"><a id="btn" href="#"
+							class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+						</td>
 					</tr>
 				</table>
 			</form>
 		</div>
 	</div>
-	
+
 	<!-- 关联客户窗口 -->
-	<div class="easyui-window" title="关联客户窗口" id="customerWindow" collapsible="false" closed="true" minimizable="false" maximizable="false" style="top:20px;left:200px;width: 400px;height: 300px;">
-		<div style="overflow:auto;padding:5px;" border="false">
-			<form id="customerForm" action="${pageContext.request.contextPath }/decidedzone_assigncustomerstodecidedzone.action" method="post">
+	<div class="easyui-window" title="关联客户窗口" id="customerWindow"
+		collapsible="false" closed="true" minimizable="false"
+		maximizable="false"
+		style="top: 20px; left: 200px; width: 400px; height: 300px;">
+		<div style="overflow: auto; padding: 5px;" border="false">
+			<form id="customerForm"
+				action="${pageContext.request.contextPath }/decidedzone_assigncustomerstodecidedzone.action"
+				method="post">
 				<table class="table-edit" width="80%" align="center">
 					<tr class="title">
 						<td colspan="3">关联客户</td>
 					</tr>
 					<tr>
-						<td>
-							<input type="hidden" name="id" id="customerDecidedZoneId" />
+						<td><input type="hidden" name="id" id="customerDecidedZoneId" />
 							<select id="noassociationSelect" multiple="multiple" size="10"></select>
 						</td>
-						<td>
-							<input type="button" value="》》" id="toRight"><br/>
-							<input type="button" value="《《" id="toLeft">
-						</td>
-						<td>
-							<select id="associationSelect" name="customerIds" multiple="multiple" size="10"></select>
-						</td>
+						<td><input type="button" value="》》" id="toRight"><br />
+							<input type="button" value="《《" id="toLeft"></td>
+						<td><select id="associationSelect" name="customerIds"
+							multiple="multiple" size="10"></select></td>
 					</tr>
 					<tr>
-						<td colspan="3"><a id="associationBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联客户</a> </td>
+						<td colspan="3"><a id="associationBtn" href="#"
+							class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联客户</a>
+						</td>
 					</tr>
 				</table>
 			</form>

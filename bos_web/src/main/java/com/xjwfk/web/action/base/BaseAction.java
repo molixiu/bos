@@ -1,8 +1,5 @@
 package com.xjwfk.web.action.base;
 
-
-
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -18,6 +15,7 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 	protected T model;
 	protected PageBean pageBean = new PageBean();
 	protected DetachedCriteria detachedCriteria = null;
+
 	@Override
 	public T getModel() {
 		// TODO Auto-generated method stub
@@ -26,9 +24,9 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 
 	public BaseAction() {
 		ParameterizedType superclass = (ParameterizedType) this.getClass().getGenericSuperclass();
-		Type[] typeArguments = superclass.getActualTypeArguments();	//获得这个类的泛型的数组
-		Class<T> entiryClass =  (Class<T>) typeArguments[0];
-		try {	//运行时反射获得实体类对象
+		Type[] typeArguments = superclass.getActualTypeArguments(); // 获得这个类的泛型的数组
+		Class<T> entiryClass = (Class<T>) typeArguments[0];
+		try { // 运行时反射获得实体类对象
 			model = entiryClass.newInstance();
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
@@ -37,12 +35,11 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		detachedCriteria = DetachedCriteria.forClass(entiryClass);
 		pageBean.setDetachedCriteria(detachedCriteria);
 	}
-	
-	
+
 	public void setPage(int page) {
 		pageBean.setPage(page);
 	}

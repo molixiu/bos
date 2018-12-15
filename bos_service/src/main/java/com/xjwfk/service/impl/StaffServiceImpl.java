@@ -1,5 +1,8 @@
 package com.xjwfk.service.impl;
 
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,5 +49,15 @@ public class StaffServiceImpl implements StaffService {
 	@Override
 	public void update(Staff staff) {
 		staffDao.update(staff);
+	}
+
+	@Override
+	public List<Staff> findBy_Keyword(DetachedCriteria detachedCriteria) {
+		return staffDao.findByCriteria(detachedCriteria);
+	}
+
+	@Override
+	public List<Staff> findAll() {
+		return staffDao.findAll();
 	}
 }

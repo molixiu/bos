@@ -86,6 +86,11 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T>{
 		pageBean.setTotal(total.intValue());
 		
 		criteria.setProjection(null);
+		/*下面这行代码表示不把关联的其他表的数据封装返回
+		 * 比如表subarea里面有一外键对应表region
+		 * 就不把region的数据封装返回了
+		 * */
+		criteria.setResultTransformer(DetachedCriteria.ROOT_ENTITY);
 		int firstResult = pageBean.getPage() - 1;
 		int maxResults = pageBean.getPageSize();
 		List rows = this.getHibernateTemplate().findByCriteria(criteria, firstResult, maxResults);
@@ -95,6 +100,11 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T>{
 	@Override
 	public void saveORupdate(T entity) {
 		this.getHibernateTemplate().saveOrUpdate(entity);
+	}
+
+	@Override
+	public List<T> findByCriteria(DetachedCriteria criteria) {
+		return (List<T>) this.getHibernateTemplate().findByCriteria(criteria);
 	}
 	
 }

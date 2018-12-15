@@ -44,7 +44,7 @@
 	}
 	
 	function doExport(){
-		alert("导出");
+		window.location.href = "${pageContext.request.contextPath}/subareaAction_exportXls";
 	}
 	
 	function doImport(){
@@ -160,7 +160,7 @@
 			pageList: [30,50,100],
 			pagination : true,
 			toolbar : toolbar,
-			url : "json/subarea.json",
+			url : "${pageContext.request.contextPath}/subareaAction_pageQuery",
 			idField : 'id',
 			columns : columns,
 			onDblClickRow : doDblClickRow
@@ -188,8 +188,28 @@
 	        resizable:false
 	    });
 		
+		///定义一个工具方法，用于将指定的form表单中所有的输入项转为json数据{key:value,key:value}
+		$.fn.serializeJson=function(){  
+	            var serializeObj={};  
+	            var array=this.serializeArray();
+	            $(array).each(function(){  
+	                if(serializeObj[this.name]){  
+	                    if($.isArray(serializeObj[this.name])){  
+	                        serializeObj[this.name].push(this.value);  
+	                    }else{  
+	                        serializeObj[this.name]=[serializeObj[this.name],this.value];  
+	                    }  
+	                }else{  
+	                    serializeObj[this.name]=this.value;   
+	                }  
+	            });  
+	            return serializeObj;  
+	        };	
+		
 		$("#btn").click(function(){
-			alert("执行查询...");
+			var formData = $("#searchForm").serializeJson();	//获得表单里的数据，json格式
+			$('#grid').datagrid('load',formData);	//重新发送数据进行条件查询,但不刷新页面
+			$('#searchWindow').window("close");
 		});
 		
 	});
@@ -207,6 +227,7 @@
 			$.messager.alert('警告', '您的输入有误');
 		}
 	}
+	
 	
 </script>	
 </head>
@@ -268,7 +289,7 @@
 	<!-- 查询分区 -->
 	<div class="easyui-window" title="查询分区窗口" id="searchWindow" collapsible="false" minimizable="false" maximizable="false" style="top:20px;left:200px">
 		<div style="overflow:auto;padding:5px;" border="false">
-			<form>
+			<form id="searchForm">
 				<table class="table-edit" width="80%" align="center">
 					<tr class="title">
 						<td colspan="2">查询条件</td>

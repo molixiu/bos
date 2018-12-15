@@ -42,5 +42,8 @@
 		<action name="subareaAction_*" class="subareaAction" method="{1}">
 			<result name="save_sucess">page_base_subarea.action</result>
 		</action>
+		<action name="decidedzoneAction_*" class="decidedzoneAction" method="{1}">
+			<result name="list">page_base_decidedzone.action</result>
+		</action>
 	</package>	
 </struts>
