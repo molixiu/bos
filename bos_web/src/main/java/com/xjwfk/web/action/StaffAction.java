@@ -26,6 +26,7 @@ public class StaffAction extends BaseAction<Staff> {
 
 	public String save() {
 		staffService.save(model);
+		return "save_success";
 	}
 
 	public String pageQuery() throws IOException { // 分页查询

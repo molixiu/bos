@@ -45,5 +45,10 @@
 		<action name="decidedzoneAction_*" class="decidedzoneAction" method="{1}">
 			<result name="list">page_base_decidedzone.action</result>
 		</action>
+		<action name="noticebillAction_*" class="noticebillAction" method="{1}">
+			<result name="list">WEB-INF/pages/qupai/noticebill_add.jsp</result>
+		</action>
+		<action name="workordermanageAction_*" class="workordermanageAction" method="{1}">
+		</action>
 	</package>	
 </struts>

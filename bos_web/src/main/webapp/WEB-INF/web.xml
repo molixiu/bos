@@ -13,6 +13,7 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 	<!-- 这算是最后一个练习的项目了,所以就配置hibernate的过滤器吧,解决延迟加载的问题 -->
+	<!-- 这个过滤器只是延长session的生命周期 -->
 	<filter>
 		<filter-name>openSessionInView</filter-name>
 		<filter-class>org.springframework.orm.hibernate5.support.OpenSessionInViewFilter</filter-class>

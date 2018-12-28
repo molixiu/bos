@@ -17,4 +17,6 @@ public interface SubareaService {
 
 	public List<Subarea> findList_notAssociate(DetachedCriteria detachedCriteria);
 
+	public List<Subarea> findListByDecidedzoneId(DetachedCriteria detachedCriteria);
+
 }

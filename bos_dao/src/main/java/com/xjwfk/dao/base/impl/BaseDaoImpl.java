@@ -89,6 +89,7 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T>{
 		/*下面这行代码表示不把关联的其他表的数据封装返回
 		 * 比如表subarea里面有一外键对应表region
 		 * 就不把region的数据封装返回了
+		 * 要不然很可能陷入死循环
 		 * */
 		criteria.setResultTransformer(DetachedCriteria.ROOT_ENTITY);
 		int firstResult = pageBean.getPage() - 1;

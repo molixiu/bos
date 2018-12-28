@@ -33,5 +33,9 @@ public class SubareaServiceImpl implements SubareaService {
 	public List<Subarea> findList_notAssociate(DetachedCriteria detachedCriteria) {
 		return subareaDao.findByCriteria(detachedCriteria);
 	}
+	@Override
+	public List<Subarea> findListByDecidedzoneId(DetachedCriteria detachedCriteria) {
+		return subareaDao.findByCriteria(detachedCriteria);
+	}
 
 }

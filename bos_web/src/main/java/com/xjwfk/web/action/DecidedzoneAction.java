@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.xjwfk.domain.Customer;
 import com.xjwfk.domain.Decidedzone;
+import com.xjwfk.service.CustomerService;
 import com.xjwfk.service.DecidedzoneService;
 import com.xjwfk.utils.MyJsonUtils;
 import com.xjwfk.web.action.base.BaseAction;
@@ -17,9 +19,12 @@ import com.xjwfk.web.action.base.BaseAction;
 @Controller
 @Scope("prototype")
 public class DecidedzoneAction extends BaseAction<Decidedzone> {
-	String[] subareaid;
+	private String[] subareaid;  
+	private List<Integer> customerIds;
 	@Autowired
 	private DecidedzoneService decidezoneService;
+	@Autowired	//注入远程调用的webService
+	private CustomerService customerService;
 	
 	public String add() {
 		if (StringUtils.isBlank(model.getStaff().getId())) {	//如果不进行staff.id的空字符串判断,当staff.id为空串后面hibernate会报错
@@ -39,8 +44,34 @@ public class DecidedzoneAction extends BaseAction<Decidedzone> {
 		return null;
 	}
 	
+	public String findCustomerNotAssociateDecidedzone() throws IOException {
+		List<Customer> customersNotAssociate = customerService.findNotAssociate();
+		String json = MyJsonUtils.OjectToJson(customersNotAssociate);
+		ServletActionContext.getResponse().setContentType("html/text;charset=utf-8");
+		ServletActionContext.getResponse().getWriter().write(json);
+		return null;
+	}
+	
+	public String findCustomerHasAssociateDecidedzone() throws IOException {
+		List<Customer> customersHasAssociate = customerService.findByDecidedzoneId(model.getId());
+		String json = MyJsonUtils.OjectToJson(customersHasAssociate);
+		ServletActionContext.getResponse().setContentType("html/text;charset=utf-8");
+		ServletActionContext.getResponse().getWriter().write(json);
+		return null;
+	}
+	
+	public String assignCustomersToDecidedzone() {
+		customerService.assignCustomersToDecidedzone(model.getId(),customerIds);
+		return "list";
+	}
+	
 	
 	public void setSubareaid(String[] subareaid) {
 		this.subareaid = subareaid;
+	}
+
+	public void setCustomerIds(List<Integer> customerIds) {
+		this.customerIds = customerIds;
 	}	
+	
 }

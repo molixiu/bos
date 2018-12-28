@@ -163,7 +163,11 @@
 			columns : columns,
 			onDblClickRow : doDblClickRow,
 			onAfterEdit : function(rowIndex, rowData, changes){
-				console.info(rowData);
+				$.post("${pageContext.request.contextPath}/workordermanageAction_save",rowData,function(data){
+					if(data == "0"){
+						$.messager.alert('提示信息','录入失败,请检查录入信息是否正确'); 
+					}
+				},"text");
 				editIndex = undefined;
 			}
 		});

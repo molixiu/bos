@@ -22,5 +22,13 @@ public class MyJsonUtils {
 		return json;
 	}
 	
+	public static String OjectToJson(List list) {
+		String json = JSONArray.fromObject(list).toString();
+		return json;
+	}
 	
+	public static String OjectToJson(Object obj) {
+		String json = JSONObject.fromObject(obj).toString();
+		return json;
+	}
 }
